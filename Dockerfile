@@ -1,14 +1,13 @@
-# Phase build
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
-WORKDIR /workspace
+# Étape 1 : construire l'application
+FROM maven:3.9.1-eclipse-temurin-20 AS build
+WORKDIR /app
 COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY . .
+COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Phase run
-FROM eclipse-temurin:17-jre
+# Étape 2 : exécuter l'application
+FROM eclipse-temurin:20-jre
 WORKDIR /app
-COPY --from=builder /workspace/target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT java -jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

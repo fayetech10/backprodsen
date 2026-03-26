@@ -17,15 +17,13 @@ import java.util.List;
 @Builder
 public class Agent {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name, photo,dateNaissance,prenom, sexe, departement, commune,region, email, adresse, telephone,role,password;
+    private String name, photo, dateNaissance, prenom, sexe, departement, commune, region, email, adresse, telephone,
+            role, password;
 
     @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Adherent> adherents = new ArrayList<>();
-
-    
-
 
 }
