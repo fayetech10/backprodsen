@@ -2,18 +2,17 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8.0
-    container_name: mysql_agent
+    image: postgres:15
+    container_name: postgres_agent
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: agentdb
-      MYSQL_USER: agentuser
-      MYSQL_PASSWORD: agentpass
+      POSTGRES_USER: csu_user
+      POSTGRES_PASSWORD: eTvL2fepurbYH64JTYa7IPMOqEeIBk8Q
+      POSTGRES_DB: csu
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
 
   app:
     build: .
@@ -21,11 +20,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/agentdb?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/agentdb
       SPRING_DATASOURCE_USERNAME: agentuser
       SPRING_DATASOURCE_PASSWORD: agentpass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
       - db
 
 volumes:
-  db_data:
+  pg_data:
