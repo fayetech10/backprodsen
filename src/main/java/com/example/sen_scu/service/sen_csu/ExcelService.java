@@ -445,7 +445,7 @@ public class ExcelService {
         return count;
     }
 
-    public Assure updateCarteStatus(Long id, String carteAssure, String dateRemise) {
+    public Assure updateCarteStatus(String id, String carteAssure, String dateRemise) {
         Assure assure = assureRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Assuré non trouvé avec l'id : " + id));
         assure.setCarteAssure(carteAssure);
@@ -527,6 +527,6 @@ public class ExcelService {
         if (filename == null || filename.isEmpty())
             return "";
         // Retourne l'URL complète pour accéder à la photo via le controller
-        return "http://localhost:8080/api/photos/" + filename;
+        return "/api/photos/" + filename;
     }
 }

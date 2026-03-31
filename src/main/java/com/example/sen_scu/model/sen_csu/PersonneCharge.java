@@ -1,22 +1,22 @@
 package com.example.sen_scu.model.sen_csu;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Entity
+@Document(collection = "personnesCharge")
 @Data
 @ToString(exclude = {"adherent", "projet"})
 public class PersonneCharge {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String prenoms;
     private String nom;
@@ -35,19 +35,16 @@ public class PersonneCharge {
     private String numeroCNi;
     private String numeroExtrait;
 
-    @ManyToOne
-    @JoinColumn(name="adherent_id")
+    @DBRef
     @JsonBackReference(value = "adherent-personneCharge")
     private Adherent adherent;
 
-    @ManyToOne
-    @JoinColumn(name = "projet_id")
+    @DBRef
     @JsonBackReference(value = "projet-personneCharge")
     private Projet projet;
 
-    @ManyToOne
+    @DBRef
     @JsonBackReference(value = "agent-personneCharge")
-    @JoinColumn(name = "agent_id")
     private Agent agent;
 
 }

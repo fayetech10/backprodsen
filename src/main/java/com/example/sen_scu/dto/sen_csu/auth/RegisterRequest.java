@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class RegisterRequest {
     @NotBlank(message = "Le prénom est obligatoire")
     private String prenoms;
-    private Long id;
+    private String id;
 
     @NotBlank(message = "Le nom est obligatoire")
     private String nom;

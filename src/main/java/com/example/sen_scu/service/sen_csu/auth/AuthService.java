@@ -32,8 +32,7 @@ public class AuthService {
                         throw new RuntimeException("Un utilisateur avec cet email existe déjà");
                 }
 
-                var agent = Agent.builder()
-                                .id(request.getId())
+                Agent agent = Agent.builder()
                                 .prenom(request.getPrenoms())
                                 .name(request.getNom())
                                 .email(request.getEmail())

@@ -4,27 +4,20 @@ import com.example.sen_scu.dto.sen_csu.PersonneChargeRequest;
 import com.example.sen_scu.model.sen_csu.Adherent;
 import com.example.sen_scu.model.sen_csu.PersonneCharge;
 import com.example.sen_scu.repository.sen_csu.AdherentRepository;
-import com.example.sen_scu.repository.sen_csu.AgentRepository;
 import com.example.sen_scu.repository.sen_csu.PersonneChargeRepository;
 import com.example.sen_scu.service.sen_csu.exception.AdherentException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
-
 @Service
 @RequiredArgsConstructor
-public class PersonneEnchargeSeviceImpl  implements PersonneEnchargeSevice {
+public class PersonneEnchargeSeviceImpl implements PersonneEnchargeSevice {
     private final PersonneChargeRepository personneChargeRepository;
     private final AdherentRepository adherentRepository;
-    private final AgentRepository agentRepository;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
-    public PersonneCharge savePersonneChargeRequest(PersonneChargeRequest request, Long adherentId) {
-// Récupérer l'adhérent
+    public PersonneCharge savePersonneChargeRequest(PersonneChargeRequest request, String adherentId) {
+        // Récupérer l'adhérent
         Adherent adherent = adherentRepository.findById(adherentId)
                 .orElseThrow(() -> new AdherentException("Adhérent non trouvé"));
 
@@ -53,15 +46,12 @@ public class PersonneEnchargeSeviceImpl  implements PersonneEnchargeSevice {
         }
         adherent.setMontantTotal(adherent.getMontantTotal() + 3500);
 
-
-
         // Sauvegarder en base
         return personneChargeRepository.save(personne);
-
     }
 
     @Override
-    public PersonneCharge update(Long adherentId,Long pcId, PersonneChargeRequest request) {
+    public PersonneCharge update(String adherentId, String pcId, PersonneChargeRequest request) {
 
         PersonneCharge existing = personneChargeRepository
                 .findByIdAndAdherentId(pcId, adherentId)
@@ -84,10 +74,9 @@ public class PersonneEnchargeSeviceImpl  implements PersonneEnchargeSevice {
     }
 
     @Override
-    @Transactional
-    public void delete(Long adherentId, Long pcId) {
+    public void delete(String adherentId, String pcId) {
         PersonneCharge pc = personneChargeRepository.findByIdAndAdherentId(pcId, adherentId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new RuntimeException(
                         "Personne en charge " + pcId + " n'appartient pas à l'adhérent " + adherentId));
         Adherent adherent = pc.getAdherent();
         personneChargeRepository.delete(pc);

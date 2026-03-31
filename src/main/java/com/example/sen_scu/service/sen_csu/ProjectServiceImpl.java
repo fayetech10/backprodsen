@@ -58,12 +58,11 @@ public class ProjectServiceImpl implements ProjectService {
         // 👉 On sauvegarde l'adhérent
         adherentRepository.save(adh);
 
-
         // 2️⃣ Création du projet
         Projet projet = new Projet();
         projet.setNomProjet(request.getNomProjet());
         projet.setDescription(request.getDescription());
-        projet.setAdherent(adh);  // association adhérent → projet
+        projet.setAdherent(adh);
 
         // 👉 On sauvegarde le projet
         return projectRepository.save(projet);

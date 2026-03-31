@@ -21,7 +21,7 @@ public class AuthResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserDto {
-        private Long id;
+        private String id;
         private String prenoms;
         private String nom;
         private String telephone;

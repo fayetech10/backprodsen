@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PaiementService {
   PaiementCotisation addPaiement(PaiementRequest request);
-  List<PaiementCotisation> getAllPaiementsByAdherentId(Long adherentId);
+  List<PaiementCotisation> getAllPaiementsByAdherentId(String adherentId);
 }

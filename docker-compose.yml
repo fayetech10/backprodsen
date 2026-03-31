@@ -1,31 +1,15 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:15
-    container_name: postgres_agent
-    restart: always
-    environment:
-      POSTGRES_USER: csu_user
-      POSTGRES_PASSWORD: eTvL2fepurbYH64JTYa7IPMOqEeIBk8Q
-      POSTGRES_DB: csu
-    ports:
-      - "5432:5432"
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-
   app:
     build: .
-    container_name: spring_agent
+    container_name: spring_sencsu
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/agentdb
-      SPRING_DATASOURCE_USERNAME: agentuser
-      SPRING_DATASOURCE_PASSWORD: agentpass
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-    depends_on:
-      - db
+      SPRING_DATA_MONGODB_URI: mongodb+srv://sencsu94_db_user:YST1cZ8ZOp0FbHte@cluster0.qvqae2u.mongodb.net/sen-csu?retryWrites=true&w=majority
+    volumes:
+      - uploads_data:/app/uploads
 
 volumes:
-  pg_data:
+  uploads_data:

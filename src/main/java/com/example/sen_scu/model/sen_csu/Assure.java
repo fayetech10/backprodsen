@@ -1,15 +1,14 @@
 package com.example.sen_scu.model.sen_csu;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document(collection = "assures")
 @Data
-@Table(name = "Assures")
 public class Assure {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String dateEnregistrement;
     private String codeImmatriculation;

@@ -2,16 +2,12 @@ package com.example.sen_scu.controller.sen_csu;
 
 import com.example.sen_scu.dto.sen_csu.AdherentRequest;
 import com.example.sen_scu.model.sen_csu.Adherent;
-import com.example.sen_scu.model.sen_csu.Agent;
 import com.example.sen_scu.service.sen_csu.AdherentService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -28,17 +24,17 @@ public class AdherentController {
             "application/json;charset=UTF-8",
             MediaType.APPLICATION_JSON_VALUE
     }, produces = "application/json")
-    public ResponseEntity<?> create(@RequestBody AdherentRequest request, @RequestParam Long agentId) {
+    public ResponseEntity<?> create(@RequestBody AdherentRequest request, @RequestParam String agentId) {
         try {
             Adherent saved = adherentService.saveWithDependants(request, agentId);
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Adhérent créé avec succès",
                     "data", Map.of("adherent_id", saved.getId())));
-        } catch (DataIntegrityViolationException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
                     "success", false,
-                    "message", "Le numéro CNI existe déjà."));
+                    "message", e.getMessage()));
         }
     }
 
@@ -53,7 +49,7 @@ public class AdherentController {
     }
 
     @GetMapping("/by-agent/{agentId}")
-    public ResponseEntity<?> getByAgent(@PathVariable("agentId") Long agentId) {
+    public ResponseEntity<?> getByAgent(@PathVariable("agentId") String agentId) {
         List<Adherent> adherents = adherentService.getAllAdherentsByAgentId(agentId);
         return ResponseEntity.ok(Map.of(
                 "success", true,
@@ -65,7 +61,6 @@ public class AdherentController {
     // SYNC (OFFLINE)
     // =========================
     @PostMapping("/sync")
-    @Transactional
     public ResponseEntity<Void> sync(@RequestBody AdherentRequest request) {
 
         adherentService.syncAdherent(request);
@@ -74,7 +69,7 @@ public class AdherentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getById(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> getById(@PathVariable String id) {
 
         Adherent adherent = adherentService.getAdherentById(id)
                 .orElseThrow();
@@ -86,13 +81,13 @@ public class AdherentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable String id) {
         adherentService.deleteAdherent(id);
         return ResponseEntity.ok("Deleted");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody AdherentRequest request) {
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody AdherentRequest request) {
         try {
             Adherent updated = adherentService.updateAdherent(id, request);
             return ResponseEntity.ok(Map.of(

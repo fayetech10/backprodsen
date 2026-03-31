@@ -1,0 +1,24 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:sen-scu >-------------------------
+[INFO] Building sen-scu 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ sen-scu ---
+[INFO] Deleting C:\Users\hp\Documents\csu1\sen-csu_back-main\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sen-scu ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ sen-scu ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 60 source files with javac [debug parameters release 17] to target\classes
+[WARNING] /C:/Users/hp/Documents/csu1/sen-csu_back-main/src/main/java/com/example/sen_scu/model/sen_csu/Agent.java:[28,28] @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.913 s
+[INFO] Finished at: 2026-03-31T11:07:40Z
+[INFO] ------------------------------------------------------------------------

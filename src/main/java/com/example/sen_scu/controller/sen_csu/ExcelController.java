@@ -25,7 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/excel")
 public class ExcelController {
 
@@ -106,7 +106,7 @@ public class ExcelController {
 
     @PutMapping("/assures/{id}/carte")
     public ResponseEntity<?> updateCarteStatus(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody Map<String, String> body) {
         String carteAssure = body.getOrDefault("carteAssure", "");
         String dateRemise = body.getOrDefault("dateRemise", "");

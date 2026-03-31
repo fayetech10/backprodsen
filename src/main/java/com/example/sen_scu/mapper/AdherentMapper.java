@@ -26,7 +26,7 @@ public class AdherentMapper {
         adherent.setClientUUID(request.getClientUUID());
         adherent.setPhoto(request.getPhoto());
         adherent.setPhotoRecto(request.getPhotoRecto());
-//        adherent.getPhotoVerso(request.getPhotoVerso());
+        adherent.setPhotoVerso(request.getPhotoVerso());
 
         // TODO : Mapper les personnes à charge si besoin
 //         adherent.setPersonnesCharge(mapDependants(request.getPersonnesCharge()));

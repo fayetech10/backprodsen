@@ -10,7 +10,6 @@ import com.example.sen_scu.repository.sen_csu.AgentRepository;
 import com.example.sen_scu.repository.sen_csu.PaiementRepository;
 import com.example.sen_scu.repository.sen_csu.ProjectRepository;
 import com.example.sen_scu.service.sen_csu.exception.AdherentException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,8 +38,7 @@ public class AdherantServiceImp implements AdherentService {
     private final ProjectRepository projectRepository;
 
     @Override
-    @Transactional
-    public Adherent saveWithDependants(AdherentRequest request, Long agentId) {
+    public Adherent saveWithDependants(AdherentRequest request, String agentId) {
         log.info("📥 Réception nouvelle demande d'adhésion : {}", request.getNumeroCNi());
 
         // 1. Validation de base
@@ -76,7 +74,7 @@ public class AdherantServiceImp implements AdherentService {
             throw new AdherentException("Le numéro CNI est requis.");
         }
 
-        if (adherentRepository.existsBynumeroCNi(cni)) {
+        if (adherentRepository.existsByNumeroCNi(cni)) {
             throw new AdherentException("Un adhérent avec ce numéro CNI existe déjà.");
         }
     }
@@ -107,8 +105,7 @@ public class AdherantServiceImp implements AdherentService {
     }
 
     @Override
-    @Transactional
-    public void deleteAdherent(Long id) {
+    public void deleteAdherent(String id) {
         if (!adherentRepository.existsById(id)) {
             throw new AdherentException("Impossible de supprimer : Adhérent introuvable.");
         }
@@ -119,18 +116,17 @@ public class AdherantServiceImp implements AdherentService {
     }
 
     @Override
-    public List<Adherent> getAllAdherentsByAgentId(Long agentId) {
+    public List<Adherent> getAllAdherentsByAgentId(String agentId) {
         return adherentRepository.findAllByAgentId(agentId);
     }
 
     @Override
-    public Optional<Adherent> getAdherentById(Long id) {
+    public Optional<Adherent> getAdherentById(String id) {
         return adherentRepository.findById(id);
     }
 
     @Override
-    @Transactional
-    public Adherent updateAdherent(Long adherentId, AdherentRequest adherent) {
+    public Adherent updateAdherent(String adherentId, AdherentRequest adherent) {
         return adherentRepository.findById(adherentId)
                 .map(existing -> {
                     existing.setNom(adherent.getNom());
@@ -174,7 +170,6 @@ public class AdherantServiceImp implements AdherentService {
         return adherentRepository.findAllByCreatedAtBetween(start, end);
     }
 
-    @Transactional
     public void syncAdherent(AdherentRequest request) {
         if (adherentRepository.existsByClientUUID(request.getClientUUID())) {
             return;

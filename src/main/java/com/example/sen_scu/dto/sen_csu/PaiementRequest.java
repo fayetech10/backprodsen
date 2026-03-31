@@ -12,5 +12,5 @@ public class PaiementRequest {
     private String photoPaiement;
     private List<String> photos;
     private String modePaiement;
-    private Long adherentId;
+    private String adherentId;
 }

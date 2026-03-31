@@ -1,15 +1,8 @@
 package com.example.sen_scu.dto.sen_csu;
 
-import com.example.sen_scu.model.sen_csu.Agent;
-import com.example.sen_scu.model.sen_csu.PersonneCharge;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class ProjetWithAdherentRequest {
@@ -41,5 +34,5 @@ public class ProjetWithAdherentRequest {
     private String numeroExtrait;
     private String secteurActivite;
 
-    private Long agentId;
+    private String agentId;
 }

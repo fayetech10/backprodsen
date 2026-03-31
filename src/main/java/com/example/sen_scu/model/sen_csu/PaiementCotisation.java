@@ -1,38 +1,33 @@
 package com.example.sen_scu.model.sen_csu;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Entity
-@Table(name = "paiement_cotisation", uniqueConstraints = {
-                @UniqueConstraint(columnNames = "reference")
-})
+@Document(collection = "paiements")
 public class PaiementCotisation {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    private String id;
 
-        private Double montant;
-        private LocalDateTime datePaiement = LocalDateTime.now();
+    private Double montant;
+    private LocalDateTime datePaiement = LocalDateTime.now();
 
-        @Column(unique = true)
-        private String reference;
+    @Indexed(unique = true)
+    private String reference;
 
-        @ElementCollection
-        @CollectionTable(name = "paiement_photos", joinColumns = @JoinColumn(name = "paiement_id"))
-        @Column(name = "photo")
-        private List<String> photos = new ArrayList<>();
-        private String photoPaiement = "";
-        private String modePaiement;
+    private List<String> photos = new ArrayList<>();
+    private String photoPaiement = "";
+    private String modePaiement;
 
-        @OneToOne(cascade = CascadeType.ALL)
-        private Adherent adherent;
+    @DBRef
+    private Adherent adherent;
 
 }

@@ -1,26 +1,25 @@
 package com.example.sen_scu.model.sen_csu;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Document(collection = "adherents")
 @Data
-@ToString(exclude = { "personnesCharge", "agent" }) // 👈 IMPORTANT
-@Table(name = "adherent", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "numeroCNi" })
-})
+@ToString(exclude = { "personnesCharge", "agent" })
 public class Adherent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String prenoms;
     private String nom;
@@ -46,24 +45,22 @@ public class Adherent {
     private LocalDateTime createdAt = LocalDateTime.now();
     private Double montantTotal = 0.0;
 
-    @Column(unique = true, nullable = false)
+    @Indexed(unique = true)
     private String clientUUID;
 
-    @Column(unique = true)
+    @Indexed(unique = true)
     private String numeroCNi;
     private String typePiece;
 
     private String secteurActivite;
 
-    @OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "adherent-personneCharge")
+    @DBRef
     private List<PersonneCharge> personnesCharge = new ArrayList<>();
-    @ManyToOne
-    @JoinColumn(name = "paiement_id")
+
+    @DBRef
     private PaiementCotisation paiementCotisation;
 
-    @ManyToOne
-    @JoinColumn(name = "agent_id")
+    @DBRef
     private Agent agent;
 
 }
