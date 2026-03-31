@@ -1,7 +1,5 @@
 package com.example.sen_scu.controller.sen_csu;
 
-import com.example.sen_scu.dto.sen_csu.AdherentRequest;
-import com.example.sen_scu.model.sen_csu.Adherent;
 import com.example.sen_scu.model.sen_csu.Agent;
 import com.example.sen_scu.service.sen_csu.AgentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,9 +17,9 @@ import java.util.Map;
 @CrossOrigin("*")
 @RequestMapping("/api/agent")
 public class AgentController {
-private final AgentService agentService;
+    private final AgentService agentService;
 
-@Operation
+    @Operation
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody Agent agent) {
         try {
@@ -30,25 +28,25 @@ private final AgentService agentService;
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Agent créé avec succès",
-                    "data", Map.of("adherent_id", saved)
-            ));
+                    "data", Map.of("adherent_id", saved)));
 
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body(Map.of(
                     "success", false,
-                    "message", "Le numéro CNI existe déjà."
-            ));
+                    "message", "Le numéro CNI existe déjà."));
         }
     }
+
     @GetMapping("/all")
-        public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll() {
         List<Agent> agents = agentService.getAll();
 
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "message", "Liste des adhérents récupérée avec succès",
-                "data", agents
-        ));}
+                "data", agents));
+    }
+
     // Login
     @Operation
     @PostMapping("/login")
@@ -63,13 +61,11 @@ private final AgentService agentService;
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Connexion réussie",
-                    "data", agent
-            ));
+                    "data", agent));
         } else {
             return ResponseEntity.status(401).body(Map.of(
                     "success", false,
-                    "message", "Email ou mot de passe incorrect"
-            ));
+                    "message", "Email ou mot de passe incorrect"));
         }
     }
 }
