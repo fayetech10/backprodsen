@@ -3,6 +3,7 @@ package com.example.sen_scu.service.sen_csu;
 import com.example.sen_scu.repository.sen_csu.AdherentRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class DashboardService {
      * Returns all dashboard statistics for a given year.
      * If year is null, defaults to the current year.
      */
+    @Cacheable(value = "dashboardStats", key = "#year != null ? #year : T(java.time.LocalDate).now().getYear()")
     public Map<String, Object> getDashboardStats(Integer year) {
         int targetYear = (year != null) ? year : LocalDate.now().getYear();
 

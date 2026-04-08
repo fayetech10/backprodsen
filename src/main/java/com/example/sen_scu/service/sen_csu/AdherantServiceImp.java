@@ -13,6 +13,9 @@ import com.example.sen_scu.service.sen_csu.exception.AdherentException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -38,6 +41,11 @@ public class AdherantServiceImp implements AdherentService {
     private final ProjectRepository projectRepository;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "adherents", allEntries = true),
+            @CacheEvict(value = "adherentsByAgent", allEntries = true),
+            @CacheEvict(value = "dashboardStats", allEntries = true)
+    })
     public Adherent saveWithDependants(AdherentRequest request, String agentId) {
         log.info("📥 Réception nouvelle demande d'adhésion : {}", request.getNumeroCNi());
 
@@ -94,6 +102,7 @@ public class AdherantServiceImp implements AdherentService {
     }
 
     @Override
+    @Cacheable(value = "adherents")
     public List<Adherent> getAllAdherents() {
         return adherentRepository.findAll();
     }
@@ -105,6 +114,12 @@ public class AdherantServiceImp implements AdherentService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "adherents", allEntries = true),
+            @CacheEvict(value = "adherentsByAgent", allEntries = true),
+            @CacheEvict(value = "adherentById", key = "#id"),
+            @CacheEvict(value = "dashboardStats", allEntries = true)
+    })
     public void deleteAdherent(String id) {
         if (!adherentRepository.existsById(id)) {
             throw new AdherentException("Impossible de supprimer : Adhérent introuvable.");
@@ -116,16 +131,24 @@ public class AdherantServiceImp implements AdherentService {
     }
 
     @Override
+    @Cacheable(value = "adherentsByAgent", key = "#agentId")
     public List<Adherent> getAllAdherentsByAgentId(String agentId) {
         return adherentRepository.findAllByAgentId(agentId);
     }
 
     @Override
+    @Cacheable(value = "adherentById", key = "#id")
     public Optional<Adherent> getAdherentById(String id) {
         return adherentRepository.findById(id);
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "adherents", allEntries = true),
+            @CacheEvict(value = "adherentsByAgent", allEntries = true),
+            @CacheEvict(value = "adherentById", key = "#adherentId"),
+            @CacheEvict(value = "dashboardStats", allEntries = true)
+    })
     public Adherent updateAdherent(String adherentId, AdherentRequest adherent) {
         return adherentRepository.findById(adherentId)
                 .map(existing -> {

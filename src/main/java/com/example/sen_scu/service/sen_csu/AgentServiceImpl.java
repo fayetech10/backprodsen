@@ -8,6 +8,9 @@ import com.example.sen_scu.repository.sen_csu.AgentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,9 @@ public class AgentServiceImpl implements AgentService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "agents", allEntries = true)
+    })
     public Agent create(AgentCreateRequest request) {
         // Vérifier si l'email existe déjà
         if (agentRepository.existsByEmail(request.getEmail())) {
@@ -54,21 +60,29 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    @Cacheable(value = "agents")
     public List<Agent> getAll() {
         return agentRepository.findAll();
     }
 
     @Override
+    @Cacheable(value = "agentById", key = "#id")
     public Optional<Agent> findById(String id) {
         return agentRepository.findById(id);
     }
 
     @Override
+    @Cacheable(value = "agentByEmail", key = "#email")
     public Optional<Agent> findByEmail(String email) {
         return agentRepository.findByEmail(email);
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "agents", allEntries = true),
+            @CacheEvict(value = "agentById", key = "#id"),
+            @CacheEvict(value = "agentByEmail", allEntries = true) // Safer to clear email cache as it might change
+    })
     public Agent update(String id, AgentUpdateRequest request) {
         Agent agent = agentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Agent non trouvé avec l'ID: " + id));
@@ -99,6 +113,11 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "agents", allEntries = true),
+            @CacheEvict(value = "agentById", key = "#id"),
+            @CacheEvict(value = "agentByEmail", allEntries = true)
+    })
     public void delete(String id) {
         Agent agent = agentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Agent non trouvé avec l'ID: " + id));
@@ -107,6 +126,10 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "agentById", key = "#id"),
+            @CacheEvict(value = "agentByEmail", allEntries = true)
+    })
     public void changePassword(String id, ChangePasswordRequest request) {
         Agent agent = agentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Agent non trouvé avec l'ID: " + id));
@@ -121,6 +144,10 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "agentById", key = "#id"),
+            @CacheEvict(value = "agentByEmail", allEntries = true)
+    })
     public void resetPassword(String id, String newPassword) {
         Agent agent = agentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Agent non trouvé avec l'ID: " + id));
