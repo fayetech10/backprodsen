@@ -17,9 +17,10 @@ public class PersonneEnchargeSeviceImpl implements PersonneEnchargeSevice {
 
     @Override
     public PersonneCharge savePersonneChargeRequest(PersonneChargeRequest request, String adherentId) {
-        // Récupérer l'adhérent
+        // Récupérer l'adhérent (par ID technique ou par UUID client)
         Adherent adherent = adherentRepository.findById(adherentId)
-                .orElseThrow(() -> new AdherentException("Adhérent non trouvé"));
+                .or(() -> adherentRepository.findByClientUUID(adherentId))
+                .orElseThrow(() -> new AdherentException("Adhérent non trouvé avec l'identifiant : " + adherentId));
 
         // Création de la personne en charge
         PersonneCharge personne = new PersonneCharge();
@@ -29,7 +30,7 @@ public class PersonneEnchargeSeviceImpl implements PersonneEnchargeSevice {
         personne.setDateNaissance(request.getDateNaissance());
         personne.setLieuNaissance(request.getLieuNaissance());
         personne.setAdresse(request.getAdresse());
-        personne.setWhatsapp(request.getTelephone());
+        personne.setWhatsapp(request.getTelephone()); // On garde telephone -> whatsapp
         personne.setLienParent(request.getLienParent());
         personne.setPhoto(request.getPhoto());
         personne.setPhotoRecto(request.getPhotoRecto());
@@ -41,13 +42,25 @@ public class PersonneEnchargeSeviceImpl implements PersonneEnchargeSevice {
         // Associer les clés étrangères
         personne.setAdherent(adherent);
 
+        // Mise à jour de l'adhérent
         if (adherent.getMontantTotal() == null) {
             adherent.setMontantTotal(0.0);
         }
         adherent.setMontantTotal(adherent.getMontantTotal() + 3500);
+        
+        // Ajouter à la liste de l'adhérent pour la cohérence de l'objet
+        if (adherent.getPersonnesCharge() == null) {
+            adherent.setPersonnesCharge(new java.util.ArrayList<>());
+        }
+        adherent.getPersonnesCharge().add(personne);
 
-        // Sauvegarder en base
-        return personneChargeRepository.save(personne);
+        // Sauvegarder la personne en charge
+        PersonneCharge saved = personneChargeRepository.save(personne);
+        
+        // Sauvegarder l'adhérent pour mettre à jour son montant total et sa liste
+        adherentRepository.save(adherent);
+        
+        return saved;
     }
 
     @Override

@@ -17,16 +17,17 @@ public class PersonneChargeRequest {
     private String nom;
     private String sexe;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate dateNaissance; // "yyyy-MM-dd"
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dateNaissance;
     private String lieuNaissance;
     private String adresse;
+    @com.fasterxml.jackson.annotation.JsonProperty("whatsapp")
     private String telephone;
     private String lienParent;
     private String photo;
     private String photoRecto;
     private String photoVerso;
     private String situationM;
-    private String numeroCNi;      // facultatif
-    private String numeroExtrait;  // facultatif
+    private String numeroCNi; // facultatif
+    private String numeroExtrait; // facultatif
 }

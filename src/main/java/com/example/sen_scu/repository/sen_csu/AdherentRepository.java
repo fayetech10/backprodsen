@@ -15,6 +15,7 @@ public interface AdherentRepository extends MongoRepository<Adherent, String> {
     List<Adherent> findAllByAgentId(String agentId);
 
     boolean existsByClientUUID(String clientUUID);
+    java.util.Optional<Adherent> findByClientUUID(String clientUUID);
 
     List<Adherent> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
